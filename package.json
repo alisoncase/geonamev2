@@ -1,0 +1,28 @@
+{
+  "name": "geoname",
+  "version": "1.0.0",
+  "description": "Geographic Name Proposal App",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ../server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alisoncase/geonameV2.git"
+  },
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "author": "Alison Case",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alisoncase/geonameV2/issues"
+  },
+  "homepage": "https://github.com/alisoncase/geonameV2#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "react-hook-form": "^7.52.2"
+  }
+}

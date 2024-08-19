@@ -1,0 +1,39 @@
+html,
+body {
+padding: 0;
+margin: 0;
+height: 100%;
+width: 100%;
+}
+
+#map-survey-container {
+display: flex;
+height: 100%;
+overflow: hidden; /* Added to prevent map overflow */
+}
+
+.embed-container {
+float: none; /* Remove float as we're using flexbox */
+width: 30px; 
+flex: 1;  /* Makes the survey container flexible */
+order: 1;  /* Moves the survey container to the right (order 1) */
+}
+
+#viewDiv {
+flex: 1; 
+order: 0;  /* Keeps the map container on the left (default order) */ 
+}
+
+.embed-container iframe {
+width: 100%; /* Scales the iframe to fit container width */
+height: 100%; /* Scales the iframe to fit container height */
+}
+.embed-container object,
+
+small {
+position: absolute;
+z-index: 40;
+bottom: 0;
+margin-bottom: -15px;
+}
+

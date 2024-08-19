@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+ <html>
+  <head>
+    <!--meta for the browser to allow for mobile-first design-->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Domestic Geographic Place Name Proposal App</title>
+    <style>
+        html,
+        body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        }
+
+        #map-survey-container {
+        display: flex;
+        height: 100%;
+        overflow: hidden; /* Added to prevent map overflow */
+        }
+
+        .survey-container {
+        float: none; /* Remove float as we're using flexbox */
+        width: 30px; 
+        flex: 1;  /* Makes the survey container flexible */
+        order: 1;  /* Moves the survey container to the right (order 1) */
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        }
+
+        #viewDiv {
+        flex: 1; 
+        order: 0;  /* Keeps the map container on the left (default order) */ 
+        }
+
+        .survey-container iframe {
+        width: 100%; /* Scales the iframe to fit container width */
+        height: 100%; /* Scales the iframe to fit container height */
+        }
+        .survey-container object,
+
+        small {
+        position: absolute;
+        z-index: 40;
+        bottom: 0;
+        margin-bottom: -15px;
+        }
+
+        </style>
+
+    <!--custom stylesheet-->
+    <!--<link rel="stylesheet" href="css/style.css">-->
+    <!--importing the CSS and libraries for esri.js-->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.26/esri/themes/light/main.css"/>
+    <script src="https://js.arcgis.com/4.26/"></script>
+    
+    <!--loading the modules-->
+    <script>
+        require(["esri/config", "esri/Map", "esri/views/MapView", "esri/widgets/Locate", "esri/widgets/Search", "esri/layers/FeatureLayer", "esri/layers/TileLayer", "esri/Basemap", "esri/widgets/CoordinateConversion",], (esriConfig, Map, MapView, Locate, Search, FeatureLayer, TileLayer, Basemap, CoordinateConversion) => {
+            // Import the API key
+            esriConfig.apiKey = "AAPK51131ceb7a344744a1876418638342eeSK8Lwr1BXfJ_rAAGMFmph-VYFJCbhVaGp2tW9m6iEHGJBjg1DFEhUf3Ay1rM_yWw";
+            
+            // Create tile layer from USGS Topo Rest Server
+            const mapBaseLayer = new TileLayer({
+                url: "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer"
+            });
+            
+            // Create basemap using tile layer
+            const customBasemap = new Basemap({
+                baseLayers: mapBaseLayer,
+                title: "USGS Topographic Map"
+            });
+
+            // Create new map object
+            const map = new Map ({
+                basemap: customBasemap
+            });
+
+            //Create new map view
+            const view = new MapView({
+                map: map, // References the map object
+                container: "viewDiv", // Reference to the DOM node that will contain the view
+                center: [-98.583333, 39.833333], // center of CONUS
+                zoom: 4 // CONUS view
+            });  
+        
+            //Create locator widget
+            const locateBtn = new Locate({
+                view: view
+            });
+            //Create search widget
+            const searchWidget = new Search({
+                maxSuggestions: 4, //Set maximum number of suggestions
+                maxResults: 4, //Set maximum number of results
+                minSuggestCharacters: 4, //Set minimum number of characters needed for suggestion
+                view: view
+            });
+
+            // Create coordinates widget to display coordinates when hovering
+            const ccWidget = new CoordinateConversion({
+                view: view
+            });
+            // Modify coordinate widget to only show XY format
+            const toRemove = ccWidget.formats.filter(format => format.name !== "xy");
+            ccWidget.formats.removeMany(toRemove);
+            
+            // Define a pop-up for geonames places layer
+            const popupPlaces = {
+                title: "Populated Place: {gaz_name}",
+                // Add content in a table for easier reading
+                content: "<table><tbody><tr><td><b>GNIS Name:</b></td><td>{gaz_name}</td></tr><tr><td><b>GNIS ID:</b></td><td>{gaz_id}</td></tr><tr><td><br><b>Feature Type:</b></td><td><br>Populated Place</td></tr><tr><td><br><b>County and State:</b></td><td><br>{county_name}, {state_alpha}</td></tr></tbody></table>"
+                //actions: [{ title: "Fill Form with Feature Info", id: "fill-form", 
+                // You can add an icon here if you want: 
+                // icon: { // type: "icon", 
+                // className: "esri-icon-clipboard" // } 
+                //}] 
+                }; 
+    
+            
+            // Create geonames places layer
+            const placesLayer = new FeatureLayer({
+                url: "https://services2.arcgis.com/FiaPA4ga0iQKduv3/arcgis/rest/services/Geonames_Places_Points_v1/FeatureServer",
+                outFields: ["gaz_id","gaz_name","gaz_featureclass","state_alpha","county_name"],
+                popupTemplate: popupPlaces
+            });
+
+            // Define the custom action to fill the form 
+            //const fillFormAction = { 
+            //    type: "button", 
+            //    title: "Fill Form with Feature Info", 
+            //    id: "fill-form", 
+            //    icon: "icon-css-class" 
+            // Replace with the CSS class for the desired icon 
+            //}; 
+
+            map.add(placesLayer); 
+
+            // Define a pop-up for geonames physical points layer
+            const popupPhysical = {
+                title: "Physical Feature: {gaz_name}",
+                // Add content in a table for easier reading
+                content: "<table><tbody><tr><td><b>GNIS Name:</b></td><td>{gaz_name}</td></tr><tr><td><b>GNIS ID:</b></td><td>{gaz_id}</td></tr><tr><td><br><b>Feature Type:</b></td><td><br>{gaz_featureclass}</td></tr><tr><td><br><b>County and State:</b></td><td><br>{county_name}, {state_alpha}</td></tr></tbody></table>"
+                //actions: [{ title: "Fill Form with Feature Info", id: "fill-form", 
+                // You can add an icon here if you want: 
+                // icon: { // type: "icon", 
+                // className: "esri-icon-clipboard" 
+                // } 
+                //}] 
+                };
+             // Create geonames physical points layer
+            const physicalLayer = new FeatureLayer({
+                url: "https://services2.arcgis.com/FiaPA4ga0iQKduv3/ArcGIS/rest/services/Geonames_Physical_Points_v1/FeatureServer",
+                outFields: ["gaz_id","gaz_name","gaz_featureclass","state_alpha","county_name"],
+                popupTemplate: popupPhysical
+            });
+            map.add(physicalLayer); 
+
+            // Add the locator widget to the top left corner of the view
+            view.ui.add(locateBtn, {
+                position: "top-left"
+            });
+            // Add the search widget to the top right right corner of the view
+            view.ui.add(searchWidget, {
+                position: "top-right"
+            });
+            // Add the coordinates widget to the bottom left of the view
+            view.ui.add(ccWidget, "bottom-left");
+            });
+         
+
+            //const geonameSurvey = document.getElementsByName('geonameSurvey')[0];
+            //    window.addEventListener("message",e=>{if(e.data){
+            //        var t=JSON.parse(e.data);["geonameSurvey:webform:formLoaded","geonameSurvey:onFormLoaded"].includes(t.event)&&t.contentHeight&&(geonameSurvey.parentNode.style.height=t.contentHeight+"px")&&(geonameSurvey.parentNode.style["padding-bottom"]="unset")}}); 
+            
+            // Event listener for feature selection 
+            //view.popup.on("trigger-action", 
+            //   function(event) { 
+            //        if (event.action.id === "fill-form") { 
+            //            const selectedFeature = event.graphic; 
+            //            const attributes = selectedFeature.attributes; 
+            //            const geometry = selectedFeature.geometry; 
+                        // Prepare data object for survey
+            //            const surveyData = { "question4": attributes.gaz_name, "question5": attributes.gaz_id, "location": geometry }; 
+            //            const submissionUrl = "survey.html"; 
+            //            fetch(submissionUrl, { 
+            //                method: "POST", 
+            //                headers: { "Content-Type": "application/json" }, 
+            //                body: JSON.stringify(surveyData) }) .then(response => response.json()) .then(data => { 
+            //                    console.log("Survey data submitted (public endpoint):", data); 
+                        // Handle success or error messages 
+            //            }) .catch(error => { console.error("Error submitting survey data:", error); }); } }); 
+            //            window.fillForm = function(gaz_name, gaz_id) { 
+            //                document.querySelector('iframe[name="geonameSurvey"]').contentWindow.postMessage(JSON.stringify({ 
+            //                event: "fillForm", gaz_name: gaz_name, gaz_id: gaz_id }), '*'); }; 
+             //       ;
+                  
+
+        </script>
+        <!--<script type="text/javascript" src="app.js"></script>-->
+  </head>
+  <body>
+    <!--Add the survey iframe-->
+    <div id="map-survey-container">
+        <div class="survey-container">
+            <iframe name="geonameSurvey" frameborder="0" marginheight="0" marginwidth="0" title="Domestic Geographic Place Name Proposal" src="survey.html"></iframe></div>
+    <!--Add the map view-->
+    <div id="viewDiv"></div>
+  </body>
+</html>
