@@ -8,9 +8,12 @@ console.log("survey.js()  starting survey.js() ... ")
 ec2ServerURL = 'http://44.207.170.49'
 
 // Import React Hook Form for survey creation
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { useForm } from 'react-hook-form';
+//import React from 'react';
+//import ReactDOM from 'react-dom/client';
+//import { useForm } from 'react-hook-form';
+const React = require('react');
+const ReactDOM = require('react-dom/client');
+const { useForm } = require('react-hook-form');
 
 const onSubmit = async (data) => {
     // Send POST request to server-side endpoint

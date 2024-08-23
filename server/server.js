@@ -1,4 +1,4 @@
-const PORT = 8000
+const PORT = 4000
 
 // Import Required Modules
 const express = require("express")
@@ -8,7 +8,7 @@ const app = express()
 // Do I need different script to run queries?
 // Perhaps if I want the app to search the database and show the proposal locations?
 // const {runQueries} = require('../server/database.js')
-//const {geonameSurvey} = require('survey.js')
+const {geonameSurvey} = require('../dist/survey.js')
 
 // Serve static files from the "/var/www/html" directory 
 app.use(express.static('/var/www/html'))
@@ -63,62 +63,52 @@ function buildInsertQuery(tableName, formData) {
   return { sqlQuery, values };
 }
 
-const placeFormData = {
-  gnisName: formData.gnisName, 
-  gnisID: formData.gnisID,
-  latitude:formData.latitude,
-  longitude: formData.longitude,
-  featureType: formData.featureType,
-  featureAddress: formData.featureAddress,
-  surveySystem: formData.surveySystem,
-  featureDescription: formData.featureDescription 
-};
-
-const completerFormData = {
-  completerName: formData. completerName, 
-  completerEmail: formData.completerEmail,
-  completerPhone: formData.completerPhone,
-  longitude: formData.longitude,
-  completerAddress: formData.completerAddress
-};
-
-const honoreeFormData = {
-  honoreeName: formData.honoreeName, 
-  honoreeDOB: formData.honoreeDOB,
-  honoreeDOD: formData.honoreeDOD,
-  longitude: formData.longitude,
-  honoreeBio: formData.honoreeBio
-};
-
-const proposedPlaceFormData = {
-  proposedName: formData.proposedName, 
-  currentLocalName: formData.currentLocalName,
-  nameDetails: formData.nameDetails,
-  wilderness: formData.wilderness,
-  honorNativeAmerican: formData.honorNativeAmerican,
-  wildernessDescription: formData.wildernessDescription,
-  localOpposition: formData.localOpposition,
-  proposalID: formData.proposalID,
-  commemorative: formData.commemorative,
-  oppositionDetails: formData.oppositionDetails,
-  additionalDetails: formData.additionalDetails,
-  tribalInput : formData.tribalInput ,
-  gnisID: formData.gnisID,
-};
-
-const proponentFormData = {
-  proponentName: formData.proponentName, 
-  proponentOrg: formData.proponentOrg,
-  proponentEmail: formData.proponentEmail,
-  proponentAddress: formData.proponentAddress,
-  otherComplete: formData.otherComplete,
-};
-
-
 
 app.post('/submit-form', async (req, res) => {
-  const { placeFormData, completerFormData, honoreeFormData, proposedPlaceFormData, proponentFormData } = req.body;
+  const { placeFormData= {
+    gnisName: formData.gnisName, 
+    gnisID: formData.gnisID,
+    latitude:formData.latitude,
+    longitude: formData.longitude,
+    featureType: formData.featureType,
+    featureAddress: formData.featureAddress,
+    surveySystem: formData.surveySystem,
+    featureDescription: formData.featureDescription 
+  }, completerFormData = {
+    completerName: formData.completerName, 
+    completerEmail: formData.completerEmail,
+    completerPhone: formData.completerPhone,
+    longitude: formData.longitude,
+    completerAddress: formData.completerAddress
+  }, honoreeFormData = {
+    honoreeName: formData.honoreeName, 
+    honoreeDOB: formData.honoreeDOB,
+    honoreeDOD: formData.honoreeDOD,
+    longitude: formData.longitude,
+    honoreeBio: formData.honoreeBio
+  }, proposedPlaceFormData = {
+    proposedName: formData.proposedName, 
+    currentLocalName: formData.currentLocalName,
+    nameDetails: formData.nameDetails,
+    wilderness: formData.wilderness,
+    honorNativeAmerican: formData.honorNativeAmerican,
+    wildernessDescription: formData.wildernessDescription,
+    localOpposition: formData.localOpposition,
+    proposalID: formData.proposalID,
+    commemorative: formData.commemorative,
+    oppositionDetails: formData.oppositionDetails,
+    additionalDetails: formData.additionalDetails,
+    tribalInput : formData.tribalInput ,
+    gnisID: formData.gnisID,
+  }, proponentFormData = {
+    proponentName: formData.proponentName, 
+    proponentOrg: formData.proponentOrg,
+    proponentEmail: formData.proponentEmail,
+    proponentAddress: formData.proponentAddress,
+    otherComplete: formData.otherComplete,
+  } } = req.body;
  
+  
   try {
     const client = await pool.connect();
 
