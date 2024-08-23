@@ -5,7 +5,10 @@ const express = require("express")
 const {Pool} = require("pg")
 
 const app = express() 
-const {runQueries} = require('../server/database.js')
+// Do I need different script to run queries?
+// Perhaps if I want the app to search the database and show the proposal locations?
+// const {runQueries} = require('../server/database.js')
+//const {geonameSurvey} = require('survey.js')
 
 // Serve static files from the "/var/www/html" directory 
 app.use(express.static('/var/www/html'))
@@ -29,15 +32,25 @@ const pool = new Pool({
     rejectUnauthorized: false
   }})
 
-// *Need version 2.6.* of node-fetch library*
+
+// This line was throwing an error 
 //const fetch = require("node-fetch")
 
-// Dynamic import
-const fetch = await import("node-fetch");
+
+// Added dynamic import to respond to error message, but this also throws an error
+//const fetch = await import("node-fetch");
 
 const request = require("request");
 const { response } = require("express")
 
+//console.log(" +++++++++ calling geonameSurvey() +++++++++++++++")
+          
+//geonameSurvey(json)
+
+//console.log(" +++++++++ completed geonameSurvey() +++++++++++++++")
+
+
+// Error saying formData is not defined
 function buildInsertQuery(tableName, formData) {
   const columns = Object.keys(formData);
   const placeholders = columns.map(() => '$').join(', ');
@@ -100,6 +113,7 @@ const proponentFormData = {
   proponentAddress: formData.proponentAddress,
   otherComplete: formData.otherComplete,
 };
+
 
 
 app.post('/submit-form', async (req, res) => {

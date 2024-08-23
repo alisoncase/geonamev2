@@ -12,6 +12,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { useForm } from 'react-hook-form';
 
+const onSubmit = async (data) => {
+    // Send POST request to server-side endpoint
+    const response = await fetch('/submit-form', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }
+)};
+
 const geonameSurvey = () => {
   const { register, handleSubmit } = useForm();
   const [showHonoreeDetails, setShowHonoreeDetails] = useState(false);
@@ -311,7 +320,7 @@ const geonameSurvey = () => {
   );
 };
 
-//Not sure if I need this root here on this script
+//Not sure if I need this root here on this script or in survey.html
 //const root = ReactDOM.createRoot(document.getElementById('root'));
 //root.render(<geonameSurvey />);
 export default geonameSurvey;
