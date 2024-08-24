@@ -2,17 +2,21 @@ const PORT = 4000
 
 // Import Required Modules
 const express = require("express")
-const {Pool} = require("pg")
+//import express from 'express';
+//import pg from 'pg';
+//import fetch from 'node-fetch';
+//import path from 'path';
+const {Pool} = require ("pg");
 
-const app = express() 
+const app = express();
 // Do I need different script to run queries?
 // Perhaps if I want the app to search the database and show the proposal locations?
 // const {runQueries} = require('../server/database.js')
 const {geonameSurvey} = require('../dist/survey.js')
-
+//const {geonameSurvey} from "../dist/survey.js"
 // Serve static files from the "/var/www/html" directory 
-app.use(express.static('/var/www/html'))
-
+//app.use(express.static('/var/www/html'))
+app.use(express.static('index.html'))
 app.use(express.json());
 
 const cors = require("cors")
