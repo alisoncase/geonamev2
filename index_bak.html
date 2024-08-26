@@ -60,10 +60,8 @@
     <!--loading the modules-->
     <script>
         require(["esri/config", "esri/Map", "esri/views/MapView", "esri/widgets/Locate", "esri/widgets/Search", "esri/layers/FeatureLayer", "esri/layers/TileLayer", "esri/Basemap", "esri/widgets/CoordinateConversion",], (esriConfig, Map, MapView, Locate, Search, FeatureLayer, TileLayer, Basemap, CoordinateConversion) => {
-            // Old API key
-            //esriConfig.apiKey = "AAPK51131ceb7a344744a1876418638342eeSK8Lwr1BXfJ_rAAGMFmph-VYFJCbhVaGp2tW9m6iEHGJBjg1DFEhUf3Ay1rM_yWw";
             // Import the API key
-            esriConfig.apiKey = "AAPTxy8BH1VEsoebNVZXo8HurDPsVuKaOZin_s_d4wFsVqA4-v1cnOlRSC9SJ09yzAMzoFDQDpck0d5r5JHgKywx24Nu5YqdfaVEjav2dzhB1FAp7aUU5U74X9g1xOwC9M5nTs8ANNY1JaeWKLZ298IQ86e5i5YOMflea4ywKe7LNHUaRaLZvufzYpk74FnZcJEx-NVnUfC5Ju03srSSuhn8eDa_pKH8rYfShiDfII4xpcMgDmJ5RD6LWccpYiqMFkuOAT1_ysJ1LHKZ";
+            esriConfig.apiKey = "AAPK51131ceb7a344744a1876418638342eeSK8Lwr1BXfJ_rAAGMFmph-VYFJCbhVaGp2tW9m6iEHGJBjg1DFEhUf3Ay1rM_yWw";
             
             // Create tile layer from USGS Topo Rest Server
             const mapBaseLayer = new TileLayer({

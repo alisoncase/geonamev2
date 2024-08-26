@@ -5,13 +5,14 @@ console.log("survey.js()  starting survey.js() ... ")
 // ------------------------------------
 // Elastic IP Address of EC2 Instance
 // ------------------------------------
-ec2ServerURL = 'http://44.207.170.49'
+const ec2ServerURL = 'http://44.207.170.49'  //need to add const infront of this.
 
 // Import React Hook Form for survey creation
 //import React from 'react';
 //import ReactDOM from 'react-dom/client';
 //import { useForm } from 'react-hook-form';
 const React = require('react');
+const { useState } = React; //missing import
 const ReactDOM = require('react-dom/client');
 const { useForm } = require('react-hook-form');
 
@@ -324,6 +325,7 @@ const geonameSurvey = () => {
 };
 
 //Not sure if I need this root here on this script or in survey.html
-//const root = ReactDOM.createRoot(document.getElementById('root'));
-//root.render(<geonameSurvey />);
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<geonameSurvey />);
 export default geonameSurvey;
+module.exports = geonameSurvey;
